@@ -6,7 +6,10 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  username: {type: String, required: true}
+  username: {type: String, required: true},
+  description: {type: String},
+  duration: {type: Number},
+  date: {type: Date}
 })
 const User = mongoose.model("User", userSchema);
 
@@ -34,5 +37,26 @@ function getAllUsersFromDatabase(response) {
   });
 }
 
+function addExercise(exercise, response) {
+  let exerciseDate = new Date();
+  if (exercise.date) {
+    exerciseDate = new Date(exercise.date);
+  }
+  let userExercise = {
+    description: exercise.description,
+    duration: exercise.duration,
+    date: exerciseDate
+  };
+  console.log(`Updating user ${exercise.userId} with following exercise details ${userExercise.description}, ${userExercise.duration}, ${userExercise.date}`);
+    User.findByIdAndUpdate(exercise.userId, userExercise, { new: true }, (err, data) => {
+      if (err) {
+        response(err, null);
+        console.error(err);
+      }
+      response(null, data);
+  });
+}
+
 exports.saveNewUserToDatabase = saveNewUserToDatabase;
 exports.getAllUsersFromDatabase = getAllUsersFromDatabase;
+exports.addExercise = addExercise;
