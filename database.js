@@ -55,7 +55,7 @@ function addExercise(exercise, response) {
         response(err, null);
         console.error(err);
       }
-      response(null, data);
+      response(null, userExercise);
   });
 }
 
