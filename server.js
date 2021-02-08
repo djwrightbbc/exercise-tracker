@@ -26,3 +26,12 @@ app.post('/api/exercise/new-user', (req, res) => {
     }
   });
 });
+
+app.get('/api/exercise/users', (req, res) => {
+  database.getAllUsersFromDatabase((err, results) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json(results);
+  });
+});

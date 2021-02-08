@@ -23,4 +23,16 @@ function saveNewUserToDatabase(username, response) {
   });
 }
 
+function getAllUsersFromDatabase(response) {
+  User.find({}, (err, results) => {
+    if (err) {
+      console.error(err);
+      response(err, null);
+    } else {
+      response(null, results);
+    }
+  });
+}
+
 exports.saveNewUserToDatabase = saveNewUserToDatabase;
+exports.getAllUsersFromDatabase = getAllUsersFromDatabase;
