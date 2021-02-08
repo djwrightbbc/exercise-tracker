@@ -9,7 +9,7 @@ const userSchema = new Schema({
   username: {type: String, required: true},
   description: {type: String},
   duration: {type: Number},
-  date: {type: Date}
+  date: {type: String}
 })
 const User = mongoose.model("User", userSchema);
 
@@ -45,7 +45,7 @@ function addExercise(exercise, response) {
   let userExercise = {
     description: exercise.description,
     duration: exercise.duration,
-    date: exerciseDate
+    date: exerciseDate.toISOString().substring(0, 10)
   };
   console.log(`Updating user ${exercise.userId} with following exercise details ${userExercise.description}, ${userExercise.duration}, ${userExercise.date}`);
     User.findByIdAndUpdate(exercise.userId, userExercise, { new: true }, (err, data) => {
