@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongodb = require('mongodb');
+const dateFormat = require('dateformat');
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -43,18 +44,20 @@ function addExercise(exercise, response) {
   if (exercise.date) {
     exerciseDate = new Date(exercise.date);
   }
+  let formattedDate = dateFormat(exerciseDate, 'ddd mmm dd yyyy');
   let userExercise = {
     description: exercise.description,
     duration: exercise.duration,
-    date: exerciseDate.toISOString().substring(0, 10),
-    userId: exercise.userId
+    date: formattedDate,
+    _id: exercise.userId
   };
-  console.log(`Updating user ${exercise.userId} with following exercise details ${userExercise.description}, ${userExercise.duration}, ${userExercise.date}`);
+  console.log(`Updating user ${exercise.userId} with following exercise details ${userExercise.description}, ${userExercise.duration}, ${formattedDate}`);
     User.findByIdAndUpdate(exercise.userId, userExercise, { new: true }, (err, data) => {
       if (err) {
         response(err, null);
         console.error(err);
       }
+      userExercise.username = data.username;
       response(null, userExercise);
   });
 }
