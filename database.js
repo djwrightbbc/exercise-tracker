@@ -47,9 +47,8 @@ function addExercise(exercise, response) {
   let formattedDate = dateFormat(exerciseDate, 'ddd mmm dd yyyy');
   let userExercise = {
     description: exercise.description,
-    duration: exercise.duration,
-    date: formattedDate,
-    _id: exercise.userId
+    duration: parseInt(exercise.duration),
+    date: formattedDate
   };
   console.log(`Updating user ${exercise.userId} with following exercise details ${userExercise.description}, ${userExercise.duration}, ${formattedDate}`);
     User.findByIdAndUpdate(exercise.userId, userExercise, { new: true }, (err, data) => {
@@ -58,6 +57,7 @@ function addExercise(exercise, response) {
         console.error(err);
       }
       userExercise.username = data.username;
+      userExercise._id = data._id;
       response(null, userExercise);
   });
 }
